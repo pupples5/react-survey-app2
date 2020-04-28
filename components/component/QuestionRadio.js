@@ -39,7 +39,6 @@ export default class QuestionRadio extends Component {
           } else {
             //true넣기 + layout 오브젝트 넣기?
             this.state.reqCheck(true, this.state.id);
-            console.log("*");
           }
         }}
       >
