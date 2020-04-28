@@ -79,7 +79,7 @@ export default class SurveyScreen4 extends Component {
 
   onRefresh = () => {
     this._getSurveyQuestionList();
-    console.log("onRefresh56");
+    console.log("onRefresh2");
   };
 
   _setValue = (questionId, value) => {
