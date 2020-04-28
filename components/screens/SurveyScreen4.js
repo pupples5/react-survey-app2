@@ -10,6 +10,7 @@ import {
   findNodeHandle,
   YellowBox,
   KeyboardAvoidingView,
+  Platform,
 } from "react-native";
 
 import Get from "../module/Get";
@@ -91,7 +92,6 @@ export default class SurveyScreen4 extends Component {
   };
 
   _renderQuestion = ({ item }) => {
-    console.log(item);
     const { id, degree_id, type, required, question, children } = item;
 
     if (type === "radio") {
@@ -127,20 +127,17 @@ export default class SurveyScreen4 extends Component {
     }
   };
   _submitAction = async () => {
-    console.log("호출2");
     const firstkey = Object.keys(this.state.QuestionisAnswered)[0];
 
     for (let item in this.state.QuestionisAnswered) {
       const index = item - firstkey;
-
       if (this.state.QuestionisAnswered[item] === false) {
         //alert("필수 항목을 입력해주세요"); //이유는 모르겠지만 alert 때문에 랜더링이 2번되서 호출 2번함;
-        console.log("호출");
+
         this.flatListRef.scrollToIndex({
           animated: true,
           index: index,
         });
-
         return;
       }
     }
@@ -165,7 +162,7 @@ export default class SurveyScreen4 extends Component {
     };
 
     body = mergeJSON.merge(body, this.state.AnswerDatas);
-
+    console.log(body);
     fetch(url, {
       method: "POST",
       headers: headers,
@@ -173,17 +170,23 @@ export default class SurveyScreen4 extends Component {
     })
       .then(function (response) {
         if (!response.ok) {
-          console.log(response);
+          // console.log(response);
           throw Error(response);
         }
         return response;
       })
       .then(function (response) {
-        console.log("ok");
+        //
       })
       .catch(function (error) {
         console.log(error);
       });
+    if (Platform.OS === "web") {
+      alert("설문조사가 완료되었습니다.");
+    } else {
+      Alert.alert("설문조사가 완료되었습니다.");
+    }
+    this.props.navigation.navigate("Survey_step1");
   };
 
   _focusTextInput = () => {
