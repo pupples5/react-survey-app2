@@ -16,6 +16,7 @@ export default class App extends React.Component {
     }, 100);
   }
   render() {
-    return <>{this.state.isLoading ? <LoadingScreen /> : <MainStack />}</>;
+    const { isLoading } = this.state;
+    return isLoading ? <LoadingScreen /> : <MainStack />;
   }
 }
