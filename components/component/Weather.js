@@ -85,7 +85,7 @@ export default class Weather extends Component {
   _getWeatherData = async () => {
     this._getLocation();
     const url = new URL(
-      "http://openapi.airkorea.or.kr/openapi/services/rest/ArpltnInforInqireSvc/getMsrstnAcctoRltmMesureDnsty?stationName=%EC%A2%85%EB%A1%9C%EA%B5%AC&dataTerm=month&pageNo=1&numOfRows=10&ServiceKey=Q7i8kskl65jQJuAAJfc3OZ5T5vDFgfQf8YYuQfp50spzizAQZGgVTZmnMMnvIP4W8vp81SgBQJaxo2YzvyIbHA%3D%3D&ver=1.3&_returnType=json"
+      "http://openapi.airkorea.or.kr/openapi/services/rest/ArpltnInforInqireSvc/getMsrstnAcctoRltmMesureDnsty?stationName=%EC%A2%85%EB%A1%9C%EA%B5%AC&dataTerm=month&pageNo=1&numOfRows=10&ServiceKey=B0vbIBkSPkpTw3LPW5N04WumIkhmqwUEAHrl04sVHPbKEbtHh7xAaA+puOgdnnQELW1p5f33f/9OLTfFmwYasw==&ver=1.3&_returnType=json"
     );
     console.log("start");
     try {

@@ -24,7 +24,6 @@ import QuestionRadio from "../component/QuestionRadio";
 
 import OtherComment from "../component/OtherComment";
 import QuestionSubjective from "../component/QuestionSubjective";
-// const ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
 
 const QUESTION_LIST_URL = `${
   require("../../assets/setting/config.json").url
@@ -170,7 +169,6 @@ export default class SurveyScreen4 extends Component {
     })
       .then(function (response) {
         if (!response.ok) {
-          // console.log(response);
           throw Error(response);
         }
         return response;
