@@ -181,26 +181,11 @@ export default class SurveyScreen4 extends Component {
               // height: null,
             }}
           > */}
-          <KeyboardAwareFlatList
-            // extraScrollHeight={Platform.OS === "ios" ? 200 : 150}
+          <keubo
             // onFocus={(event: Event) => {
             //   // `bind` the function if you're using ES6 classes
             //   this._scrollToInput(ReactNative.findNodeHandle(event.target));
             // }}
-            onKeyboardWillShow={({ endCoordinates: { screenY } }) => {
-              if (this.flatListRef && Platform.OS === "ios") {
-                // This setTimeout is pretty important because the application has to wait til the keyboardshow event is completed to scroll to the offset. If you do not set it the scroll will just "shake" the screen
-
-                setTimeout(
-                  () =>
-                    this.flatListRef.scrollToOffset({
-                      animated: true,
-                      offset: 0 - screenY / 2,
-                    }),
-                  300
-                );
-              }
-            }}
             keyboardShouldPersistTaps={"never"}
             enableOnAndroid={true}
             data={this.state.QuestionDatas}
