@@ -11,6 +11,7 @@ import {
   YellowBox,
   KeyboardAvoidingView,
   Platform,
+  UIManager,
 } from "react-native";
 
 import Get from "../module/Get";
@@ -90,12 +91,22 @@ export default class SurveyScreen4 extends Component {
     this.state.AnswerDatas = mergeJSON.merge(this.state.AnswerDatas, ans);
   };
 
+  _findDimensions = (layout) => {
+    const { x, y, width, height } = layout;
+    console.log(x, y, width, height);
+  };
+
   _renderQuestion = ({ item }) => {
     const { id, degree_id, type, required, question, children } = item;
 
     if (type === "radio") {
       return (
-        <View>
+        <View
+          ref="Marker"
+          onLayout={(event) => {
+            this._findDimensions(event.nativeEvent.layout);
+          }}
+        >
           <QuestionRadio
             id={id}
             degree_id={degree_id}
@@ -133,10 +144,20 @@ export default class SurveyScreen4 extends Component {
       if (this.state.QuestionisAnswered[item] === false) {
         //alert("필수 항목을 입력해주세요"); //이유는 모르겠지만 alert 때문에 랜더링이 2번되서 호출 2번함;
 
+        /*
+        this.flatListRef.scrollToOffset({
+          offset: 300,
+          animated: true,
+        });
+        */
+        //this.flatListRef.scrollTo(0, 0);
+
         this.flatListRef.scrollToIndex({
           animated: true,
           index: index,
         });
+
+        //this.refs.flatListRef.current.snapToItem(index);
         return;
       }
     }
@@ -212,16 +233,32 @@ export default class SurveyScreen4 extends Component {
         <Text style={styles.title}>설문조사</Text>
         <View style={styles.survey_container}>
           <Text style={styles.text}>Step4. 설문 답변을 입력해주세요.</Text>
-          <KeyboardAwareScrollView
+          <KeyboardAvoidingView
+            // behavior="height"
+            // keyboardVerticalOffset={300}
+            keyboardShouldPersistTaps={"always"}
+            behavior={Platform.OS === "ios" ? "padding" : null}
+            keyboardVerticalOffset={Platform.select({ ios: 120, android: 500 })}
+            // keyboardShouldPersistTaps={"always"}
+            // keyboardDismissMode={"none"}
+            enableOnAndroid={true}
+            // style={{
+            //   flex: 1,
+            //   flexDirection: "column",
+            //   justifyContent: "center",
+            // }}
+            // behavior="padding"
+            // enabled
+            // keyboardVerticalOffset={100}
+
             contentContainerStyle={{
-              flex: 1,
-              // justifyContent: "space-around",
-              // alignItems: "center",
-              // width: null,
-              // height: null,
+              height: 150,
+              // flex: 1,
+              // justifyContent: "flex-end",
             }}
           >
             <FlatList
+              keyboardShouldPersistTaps={"always"}
               data={this.state.QuestionDatas}
               ref={(ref) => {
                 this.flatListRef = ref;
@@ -231,9 +268,9 @@ export default class SurveyScreen4 extends Component {
               onEndReachedThreshold={1}
               refreshing={this.state.refreshing}
               onRefresh={this.onRefresh}
-              style={{
-                overflowX: "hidden",
-              }}
+              // style={{
+              //   overflowX: "hidden",
+              // }}
               renderItem={this._renderQuestion}
               ListFooterComponent={
                 <OtherComment
@@ -242,7 +279,7 @@ export default class SurveyScreen4 extends Component {
                 />
               }
             />
-          </KeyboardAwareScrollView>
+          </KeyboardAvoidingView>
         </View>
       </View>
     );

@@ -48,7 +48,7 @@ export default class QuestionSubjective extends Component {
         <TextInput
           style={styles.inputArea}
           placeholder="의견을 작성해주세요."
-          keyboardType="default"
+          keyboardType="none"
           multiline
           onBlur={() => {
             if (this.state.text !== "") {
