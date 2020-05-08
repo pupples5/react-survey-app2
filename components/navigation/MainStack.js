@@ -58,6 +58,7 @@ const SurveyNavigation = createStackNavigator(
   {
     defaultNavigationOptions: {
       headerBackTitleVisible: false,
+      animationEnabled: false, //애니메이션 제거
       headerStyle: {
         backgroundColor: "#fcfcfc",
         borderBottomWidth: 1,
@@ -86,6 +87,7 @@ const MainStack = createBottomTabNavigator(
     defaultNavigationOptions: ({ navigation }) => ({
       swipeEnabled: true,
       adaptive: true,
+
       tabBarIcon: ({ horizontal, tintColor }) => {
         const { routeName } = navigation.state;
         let IconComponent = Ionicons;
