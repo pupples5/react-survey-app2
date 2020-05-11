@@ -133,6 +133,7 @@ const styles = StyleSheet.create({
     padding: 5,
     color: "white",
     borderRadius: 8,
+    fontFamily: "OpenSans",
   },
   survey_status_badge_before: {
     fontSize: 13,

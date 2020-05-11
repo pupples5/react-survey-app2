@@ -1,5 +1,13 @@
 import React, { Component } from "react";
-import { StyleSheet, Text, View, TextInput, Button } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  TextInput,
+  Button,
+  findNodeHandle,
+  Keyboard,
+} from "react-native";
 
 export default class OtherComment extends Component {
   constructor(props) {
@@ -7,6 +15,7 @@ export default class OtherComment extends Component {
     this.state = {
       _submitAction: props._submitAction,
       _ChangeOtherComment: props._ChangeOtherComment,
+      isEndElement: true,
     };
   }
 
@@ -18,9 +27,15 @@ export default class OtherComment extends Component {
           style={{
             paddingBottom: 20,
           }}
+          ref={(ref) => {
+            this.view = ref;
+          }}
         >
           <Text style={styles.opinion}>기타의견</Text>
           <TextInput
+            ref={(ref) => {
+              this.text = ref;
+            }}
             style={styles.inputArea}
             placeholder="기타의견을 작성해주세요."
             keyboardType="default"
@@ -30,7 +45,18 @@ export default class OtherComment extends Component {
             onChangeText={(text) => {
               this.state._ChangeOtherComment(text);
             }}
+            onFocus={(event) => {
+              this.props._scrollToInput(findNodeHandle(event.target));
+            }}
+            onBlur={() => {
+              this.setState({ isEndElement: true });
+              Keyboard.dismiss;
+            }}
           />
+          {/* {this.state.isEndElement ? (
+            <View style={{ backgroundColor: "red", height: 400 }} />
+          ) : null} */}
+          {/* <View style={{ backgroundColor: "blue", height: 200 }} /> */}
         </View>
         <Button onPress={this.state._submitAction} title="제출하기" />
       </View>

@@ -27,10 +27,10 @@ export default class QuestionSubjective extends Component {
           const layout = event.nativeEvent.layout;
           if (this.state.required === 1) {
             //false넣기 + layout 오브젝트 넣기?
-            this.state.reqCheck(false, this.state.id);
+            this.state.reqCheck(false, this.state.id, this.state.question);
           } else {
             //true넣기 + layout 오브젝트 넣기?
-            this.state.reqCheck(true, this.state.id);
+            this.state.reqCheck(true, this.state.id, this.state.question);
           }
         }}
         style={{
@@ -53,7 +53,7 @@ export default class QuestionSubjective extends Component {
           onBlur={() => {
             if (this.state.text !== "") {
               this.state._setAnswerDatas(this.state.id, this.state.text);
-              this.state.reqCheck(true, this.state.id);
+              this.state.reqCheck(true, this.state.id, this.state.question);
             }
           }}
           blurOnSubmit={false}

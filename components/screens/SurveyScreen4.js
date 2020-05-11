@@ -1,14 +1,20 @@
-import React, { Component } from "react";
+import React, { Component, createRef } from "react";
 import {
   FlatList,
   StyleSheet,
   Text,
+  Button,
   View,
   Alert,
   ActivityIndicator,
   findNodeHandle,
-  Platform,
+  YellowBox,
+  Keyboard,
+  TextInput,
+  Dimensions,
   KeyboardAvoidingView,
+  Platform,
+  ToastAndroid,
 } from "react-native";
 import Get from "../module/Get";
 import {
@@ -21,6 +27,7 @@ import QuestionSubjective from "../component/QuestionSubjective";
 const QUESTION_LIST_URL = `${
   require("../../assets/setting/config.json").url
 }survey/question/`;
+
 export default class SurveyScreen4 extends Component {
   TESTURL = "";
   constructor(props) {
@@ -34,18 +41,22 @@ export default class SurveyScreen4 extends Component {
       degree_id: this.props.navigation.state.params.degree_id,
       department_id: this.props.navigation.state.params.dept_id,
       service_id: this.props.navigation.state.params.service_id,
+      QuestionScrollRef: [],
       QuestionisAnswered: [],
+      QuestionName: [],
     };
     this.flatListRef = "";
-    this.awareRef = "";
     this.TESTURL = QUESTION_LIST_URL + this.state.degree_id;
   }
-  _setAnswerCheck = (isReq, questionId) => {
+  _setAnswerCheck = (isReq, questionId, questionName) => {
     var mergeJSON = require("merge-json");
     this.state.QuestionisAnswered = mergeJSON.merge(
       this.state.QuestionisAnswered,
       { [`${questionId}`]: isReq }
     );
+    this.state.QuestionName = mergeJSON.merge(this.state.QuestionName, {
+      [`${questionId}`]: questionName,
+    });
   };
   _setAnswerDatas = (questionId, text) => {
     var mergeJSON = require("merge-json");
@@ -61,6 +72,10 @@ export default class SurveyScreen4 extends Component {
   _ChangeOtherComment = (text) => {
     this.state.otherComment = text;
   };
+  onRefresh = () => {
+    this._getSurveyQuestionList();
+    console.log("onRefresh2");
+  };
   _setValue = (questionId, value) => {
     var mergeJSON = require("merge-json");
     var ans = {
@@ -74,6 +89,7 @@ export default class SurveyScreen4 extends Component {
       return (
         <View>
           <QuestionRadio
+            ref={(ref) => (this.questionRadio = ref)}
             id={id}
             degree_id={degree_id}
             type={type}
@@ -104,16 +120,18 @@ export default class SurveyScreen4 extends Component {
   };
   _submitAction = async () => {
     const firstkey = Object.keys(this.state.QuestionisAnswered)[0];
-    console.log(",,", this.awareRef);
     for (let item in this.state.QuestionisAnswered) {
       const index = item - firstkey;
       if (this.state.QuestionisAnswered[item] === false) {
-        //alert("필수 항목을 입력해주세요"); //이유는 모르겠지만 alert 때문에 랜더링이 2번되서 호출 2번함;
-
+        Alert.alert(
+          "필수 항목을 입력해주세요\n",
+          "- " + this.state.QuestionName[item]
+        ); //이유는 모르겠지만 alert 때문에 랜더링이 2번되서 호출 2번함;
         this.flatListRef.scrollToIndex({
           animated: true,
           index: index,
         });
+
         return;
       }
     }
@@ -170,64 +188,58 @@ export default class SurveyScreen4 extends Component {
         <Text style={styles.title}>설문조사</Text>
         <View style={styles.survey_container}>
           <Text style={styles.text}>Step4. 설문 답변을 입력해주세요.</Text>
-
-          {/* <KeyboardAwareFlatList
-            extraScrollHeight={Platform.OS === "ios" ? 200 : 150}
-            contentContainerStyle={{
-              flex: 1,
-              // justifyContent: "space-around",
-              // alignItems: "center",
-              // width: null,
-              // height: null,
+          <KeyboardAwareScrollView
+            innerRef={(ref) => {
+              this.scroll = ref;
             }}
-          > */}
-          <KeyboardAwareFlatList
-            // extraScrollHeight={Platform.OS === "ios" ? 200 : 150}
-            // onFocus={(event: Event) => {
-            //   // `bind` the function if you're using ES6 classes
-            //   this._scrollToInput(ReactNative.findNodeHandle(event.target));
+            // contentContainerStyle={{
+            //   flex: 1,
+
+            //   // alignItems: "center",
+            //   // width: null,
+            //   // height: null,
             // }}
-            onKeyboardWillShow={({ endCoordinates: { screenY } }) => {
-              if (this.flatListRef && Platform.OS === "ios") {
-                // This setTimeout is pretty important because the application has to wait til the keyboardshow event is completed to scroll to the offset. If you do not set it the scroll will just "shake" the screen
+            // enableOnAndroid={true}
+          >
+            <FlatList
+              // contentContainerStyle={{
+              //   flex: 1,
 
-                setTimeout(
-                  () =>
-                    this.flatListRef.scrollToOffset({
-                      animated: true,
-                      offset: 0 - screenY / 2,
-                    }),
-                  300
-                );
+              //   justifyContent: "center",
+              //   // alignItems: "center",
+              //   // width: null,
+              //   // height: null,
+              // }}
+
+              ref={(ref) => {
+                this.flatListRef = ref;
+              }}
+              data={this.state.QuestionDatas}
+              keyExtractor={(item, index) => index.toString()}
+              initialNumToRender={20}
+              onEndReachedThreshold={1}
+              // style={{
+              //   overflowX: "hidden",
+              // }}
+              renderItem={this._renderQuestion}
+              ListFooterComponent={
+                <OtherComment
+                  _submitAction={this._submitAction}
+                  _ChangeOtherComment={this._ChangeOtherComment}
+                  _ref={this.scroll}
+                  _scrollToInput={this._scrollToInput}
+                />
               }
-            }}
-            keyboardShouldPersistTaps={"never"}
-            enableOnAndroid={true}
-            data={this.state.QuestionDatas}
-            ref={(ref) => {
-              this.flatListRef = ref;
-            }}
-            keyExtractor={(item, index) => index.toString()}
-            initialNumToRender={20}
-            onEndReachedThreshold={1}
-            renderItem={this._renderQuestion}
-            ListFooterComponent={
-              <OtherComment
-                _submitAction={this._submitAction}
-                _ChangeOtherComment={this._ChangeOtherComment}
-              />
-            }
-          />
-          {/* </KeyboardAvoidingView> */}
+            />
+          </KeyboardAwareScrollView>
         </View>
       </View>
     );
   }
-  _scrollToInput(reactNode: any) {
-    // Add a 'scroll' ref to your ScrollView
-    console.log("flflflflfl ~~~ ", this.awareRef.props);
-    this.awareRef.scrollToFocusedInput(reactNode);
-  }
+  _scrollToInput = (reactNode) => {
+    console.log("*", reactNode);
+    this.scroll.props.scrollToFocusedInput(reactNode);
+  };
 }
 const styles = StyleSheet.create({
   container: {

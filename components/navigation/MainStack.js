@@ -125,7 +125,7 @@ const styles = StyleSheet.create({
   header_title: { fontSize: 18, color: "black", fontWeight: "bold" },
 });
 
-export default createAppContainer(MainStack);
+export default createAppContainer(SurveyNavigation);
 
 /*const AppContainer = createAppContainer(MainStack);
 // export default App;
