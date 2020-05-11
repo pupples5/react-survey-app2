@@ -9,6 +9,7 @@ const theme = {
     warning: "#919191", //end
   },
 };
+
 class SurveyItem extends React.Component {
   /*
   TODO: 받아온 데이터의 요소들을 prop을 통해 사용할 것인지, state에 저장할 것인지 추후 결정 필요
@@ -130,6 +131,7 @@ const styles = StyleSheet.create({
   survey_status_badge_ing: {
     fontSize: 13,
     fontWeight: "bold",
+    // fontFamily: "korea-fonts",
     padding: 5,
     color: "white",
     borderRadius: 8,
@@ -138,6 +140,7 @@ const styles = StyleSheet.create({
   survey_status_badge_before: {
     fontSize: 13,
     fontWeight: "bold",
+    // fontFamily: "korea-fonts",
     padding: 5,
     color: "white",
     borderRadius: 8,
@@ -145,6 +148,7 @@ const styles = StyleSheet.create({
   survey_status_badge_end: {
     fontSize: 13,
     fontWeight: "bold",
+    // fontFamily: "korea-fonts",
     padding: 5,
     color: "white",
     borderRadius: 8,

@@ -13,6 +13,7 @@ export default class QuestionSubjective extends Component {
       required: props.required,
       _setAnswerDatas: props._setAnswerDatas,
       reqCheck: props.reqCheck,
+      setitemRef: props._setitemRef,
     };
   }
 
@@ -23,6 +24,10 @@ export default class QuestionSubjective extends Component {
     // this.state.onSelect(this.state.id, radioButtons[0].props.value);
     return (
       <View
+        ref={(ref) => {
+          console.log(ref);
+          this.state.setitemRef(ref);
+        }}
         onLayout={(event) => {
           const layout = event.nativeEvent.layout;
           if (this.state.required === 1) {
@@ -48,7 +53,7 @@ export default class QuestionSubjective extends Component {
         <TextInput
           style={styles.inputArea}
           placeholder="의견을 작성해주세요."
-          keyboardType="default"
+          keyboardType="none"
           multiline
           onBlur={() => {
             if (this.state.text !== "") {

@@ -15,7 +15,8 @@ export default class OtherComment extends Component {
     this.state = {
       _submitAction: props._submitAction,
       _ChangeOtherComment: props._ChangeOtherComment,
-      isEndElement: true,
+      empty: [],
+      isfocused: "",
     };
   }
 
@@ -41,7 +42,7 @@ export default class OtherComment extends Component {
             keyboardType="default"
             multiline
             blurOnSubmit={false}
-            returnKeyType="next"
+            returnKeyType="none"
             onChangeText={(text) => {
               this.state._ChangeOtherComment(text);
             }}
@@ -58,7 +59,9 @@ export default class OtherComment extends Component {
           ) : null} */}
           {/* <View style={{ backgroundColor: "blue", height: 200 }} /> */}
         </View>
+
         <Button onPress={this.state._submitAction} title="제출하기" />
+        {this.state.isfocused ? <View style={{ height: 300 }}></View> : <></>}
       </View>
     );
   }

@@ -3,6 +3,7 @@ import { useFonts } from "@use-expo/font";
 import { View } from "react-native";
 import MainStack from "./components/navigation/MainStack";
 import LoadingScreen from "./components/screens/LoadingScreen";
+import { useFonts } from "@use-expo/font";
 
 // export default class App extends React.Component {
 //   constructor(props) {

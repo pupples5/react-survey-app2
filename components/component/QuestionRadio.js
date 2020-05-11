@@ -14,11 +14,16 @@ export default class QuestionRadio extends Component {
       children: props.children,
       onSelect: props.onSelect,
       reqCheck: props.reqCheck,
+      setitemRef: props._setitemRef,
+      sihoon: props.sihoon,
+      isEmpty: false,
     };
     this.Radioref = "";
   }
 
   render() {
+    console.log("하하,", this.state.sihoon);
+    console.log("ren", this.state.isEmpty);
     const radioButtons = [];
     this.state.children.map((item, key) => {
       radioButtons.push(
@@ -31,8 +36,12 @@ export default class QuestionRadio extends Component {
     });
     return (
       <View
+        ref={(ref) => {
+          this.state.setitemRef(ref, this.state.id);
+        }}
         onLayout={(event) => {
           const layout = event.nativeEvent.layout;
+          // console.log(layout.y);
           if (this.state.required === 1) {
             //false넣기 + layout 오브젝트 넣기?
             this.state.reqCheck(false, this.state.id, this.state.question);
@@ -50,6 +59,7 @@ export default class QuestionRadio extends Component {
             <></>
           )}
         </View>
+
         <RadioGroup
           color="#9575b2"
           highlightColor="#ccc8b9"
@@ -57,6 +67,7 @@ export default class QuestionRadio extends Component {
             //console.log(radioButtons[value].props.value);
             this.state.onSelect(this.state.id, radioButtons[value].props.value);
             this.state.reqCheck(true, this.state.id, this.state.question);
+            this.state.isEmpty = true;
           }}
           style={styles.radio_group}
         >
@@ -76,6 +87,16 @@ const styles = StyleSheet.create({
     borderTopColor: "gray",
     flexDirection: "row",
   },
+  title_container2: {
+    marginTop: 10,
+    borderBottomWidth: 1.5,
+    borderTopWidth: 1.5,
+    borderBottomColor: "gray",
+    borderTopColor: "gray",
+    flexDirection: "row",
+    backgroundColor: "red",
+  },
+
   title_text: {
     margin: 5,
     fontWeight: "bold",

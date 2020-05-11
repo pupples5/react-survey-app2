@@ -12,6 +12,8 @@ import {
   Keyboard,
   TextInput,
   Dimensions,
+  Platform,
+  UIManager,
   KeyboardAvoidingView,
   Platform,
   ToastAndroid,
@@ -48,12 +50,23 @@ export default class SurveyScreen4 extends Component {
     this.flatListRef = "";
     this.TESTURL = QUESTION_LIST_URL + this.state.degree_id;
   }
+
+  _setitemRef = (ref, questionId) => {
+    var mergeJSON = require("merge-json");
+    this.state.QuestionScrollRef = mergeJSON.merge(
+      this.state.QuestionScrollRef,
+      { [`${questionId}`]: ref }
+    );
+
+    // console.log("호출", this.state.QuestionScrollRef);
+  };
   _setAnswerCheck = (isReq, questionId, questionName) => {
     var mergeJSON = require("merge-json");
     this.state.QuestionisAnswered = mergeJSON.merge(
       this.state.QuestionisAnswered,
       { [`${questionId}`]: isReq }
     );
+    // console.log("8", questionName);
     this.state.QuestionName = mergeJSON.merge(this.state.QuestionName, {
       [`${questionId}`]: questionName,
     });
@@ -83,11 +96,23 @@ export default class SurveyScreen4 extends Component {
     };
     this.state.AnswerDatas = mergeJSON.merge(this.state.AnswerDatas, ans);
   };
+
+  _findDimensions = (layout) => {
+    const { x, y, width, height } = layout;
+    console.log(x, y, width, height);
+  };
+
   _renderQuestion = ({ item }) => {
     const { id, degree_id, type, required, question, children } = item;
+    console.log("_renderQuestion,", this.state.sihoon);
     if (type === "radio") {
       return (
-        <View>
+        <View
+          ref="Marker"
+          onLayout={(event) => {
+            this._findDimensions(event.nativeEvent.layout);
+          }}
+        >
           <QuestionRadio
             ref={(ref) => (this.questionRadio = ref)}
             id={id}
@@ -98,6 +123,8 @@ export default class SurveyScreen4 extends Component {
             children={children}
             onSelect={this._setValue}
             reqCheck={this._setAnswerCheck}
+            _setitemRef={this._setitemRef}
+            sihoon={this.state.sihoon}
           ></QuestionRadio>
         </View>
       );
@@ -112,6 +139,7 @@ export default class SurveyScreen4 extends Component {
             question={question}
             _setAnswerDatas={this._setAnswerDatas}
             reqCheck={this._setAnswerCheck}
+            _setitemRef={this._setitemRef}
           ></QuestionSubjective>
         </View>
       );
@@ -127,11 +155,20 @@ export default class SurveyScreen4 extends Component {
           "필수 항목을 입력해주세요\n",
           "- " + this.state.QuestionName[item]
         ); //이유는 모르겠지만 alert 때문에 랜더링이 2번되서 호출 2번함;
+        //alert("필수 항목을 입력해주세요"); //이유는 모르겠지만 alert 때문에 랜더링이 2번되서 호출 2번함;
+
+        /*
+        this.flatListRef.scrollToOffset({
+          offset: 300,
+          animated: true,
+        });
+        */
+        //this.flatListRef.scrollTo(0, 0);
+        // this.setState({ sihoon: true });
         this.flatListRef.scrollToIndex({
           animated: true,
           index: index,
         });
-
         return;
       }
     }
@@ -151,7 +188,7 @@ export default class SurveyScreen4 extends Component {
       service_id: this.state.service_id,
     };
     body = mergeJSON.merge(body, this.state.AnswerDatas);
-    console.log(body);
+    // console.log(body);
     fetch(url, {
       method: "POST",
       headers: headers,
@@ -177,6 +214,23 @@ export default class SurveyScreen4 extends Component {
     this.props.navigation.navigate("Survey_step1");
   };
 
+  _focusTextInput = () => {
+    console.log("_focusTextInput");
+  };
+
+  _blurTextInput = () => {
+    console.log("_blurTextInput");
+    this.scrollRef.scrollToEnd();
+  };
+
+  _scrollToInput(reactNode) {
+    // Add a 'scroll' ref to your ScrollView
+    console.log(this.scroll.current);
+    //this.scroll.current;
+  }
+  componentDidMount() {
+    console.log(",,,,,,,,,,", this.state.QuestionScrollRef.length);
+  }
   render() {
     return this.state.isLoading ? (
       <View style={{ flex: 1, justifyContent: "center" }}>
@@ -188,36 +242,41 @@ export default class SurveyScreen4 extends Component {
         <Text style={styles.title}>설문조사</Text>
         <View style={styles.survey_container}>
           <Text style={styles.text}>Step4. 설문 답변을 입력해주세요.</Text>
-          <KeyboardAwareScrollView
-            innerRef={(ref) => {
-              this.scroll = ref;
-            }}
-            // contentContainerStyle={{
+          <KeyboardAvoidingView
+            // behavior="height"
+            // keyboardVerticalOffset={300}
+            keyboardShouldPersistTaps={"always"}
+            behavior={Platform.OS === "ios" ? "padding" : null}
+            keyboardVerticalOffset={Platform.select({ ios: 120, android: 500 })}
+            // keyboardShouldPersistTaps={"always"}
+            // keyboardDismissMode={"none"}
+            enableOnAndroid={true}
+            // style={{
             //   flex: 1,
-
-            //   // alignItems: "center",
-            //   // width: null,
-            //   // height: null,
+            //   flexDirection: "column",
+            //   justifyContent: "center",
             // }}
-            // enableOnAndroid={true}
+            // behavior="padding"
+            // enabled
+            // keyboardVerticalOffset={100}
+
+            // contentContainerStyle={{
+            //   height: 150,
+            //   // flex: 1,
+            //   // justifyContent: "flex-end",
+            // }}
           >
             <FlatList
-              // contentContainerStyle={{
-              //   flex: 1,
-
-              //   justifyContent: "center",
-              //   // alignItems: "center",
-              //   // width: null,
-              //   // height: null,
-              // }}
-
+              keyboardShouldPersistTaps={"always"}
+              data={this.state.QuestionDatas}
               ref={(ref) => {
                 this.flatListRef = ref;
               }}
-              data={this.state.QuestionDatas}
               keyExtractor={(item, index) => index.toString()}
               initialNumToRender={20}
               onEndReachedThreshold={1}
+              // refreshing={this.state.refreshing}
+              // onRefresh={this.onRefresh}
               // style={{
               //   overflowX: "hidden",
               // }}
@@ -226,12 +285,10 @@ export default class SurveyScreen4 extends Component {
                 <OtherComment
                   _submitAction={this._submitAction}
                   _ChangeOtherComment={this._ChangeOtherComment}
-                  _ref={this.scroll}
-                  _scrollToInput={this._scrollToInput}
                 />
               }
             />
-          </KeyboardAwareScrollView>
+          </KeyboardAvoidingView>
         </View>
       </View>
     );
