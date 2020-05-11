@@ -47,18 +47,32 @@ export default class SurveyScreen4 extends Component {
       service_id: this.props.navigation.state.params.service_id,
       QuestionScrollRef: [],
       QuestionisAnswered: [],
+      sihoon: false,
     };
     this.flatListRef = "";
     this.TESTURL = QUESTION_LIST_URL + this.state.degree_id;
   }
 
-  _setAnswerCheck = (isReq, questionId) => {
+  _setitemRef = (ref, questionId) => {
+    var mergeJSON = require("merge-json");
+    this.state.QuestionScrollRef = mergeJSON.merge(
+      this.state.QuestionScrollRef,
+      { [`${questionId}`]: ref }
+    );
+
+    // console.log("호출", this.state.QuestionScrollRef);
+  };
+  _setAnswerCheck = (isReq, questionId, questionName) => {
     var mergeJSON = require("merge-json");
 
     this.state.QuestionisAnswered = mergeJSON.merge(
       this.state.QuestionisAnswered,
       { [`${questionId}`]: isReq }
     );
+    // console.log("8", questionName);
+    this.state.QuestionName = mergeJSON.merge(this.state.QuestionName, {
+      [`${questionId}`]: questionName,
+    });
   };
 
   _setAnswerDatas = (questionId, text) => {
@@ -98,7 +112,7 @@ export default class SurveyScreen4 extends Component {
 
   _renderQuestion = ({ item }) => {
     const { id, degree_id, type, required, question, children } = item;
-
+    console.log("_renderQuestion,", this.state.sihoon);
     if (type === "radio") {
       return (
         <View
@@ -108,6 +122,7 @@ export default class SurveyScreen4 extends Component {
           }}
         >
           <QuestionRadio
+            ref={(ref) => (this.myRef = ref)}
             id={id}
             degree_id={degree_id}
             type={type}
@@ -116,6 +131,8 @@ export default class SurveyScreen4 extends Component {
             children={children}
             onSelect={this._setValue}
             reqCheck={this._setAnswerCheck}
+            _setitemRef={this._setitemRef}
+            sihoon={this.state.sihoon}
           ></QuestionRadio>
         </View>
       );
@@ -130,6 +147,7 @@ export default class SurveyScreen4 extends Component {
             question={question}
             _setAnswerDatas={this._setAnswerDatas}
             reqCheck={this._setAnswerCheck}
+            _setitemRef={this._setitemRef}
           ></QuestionSubjective>
         </View>
       );
@@ -151,13 +169,18 @@ export default class SurveyScreen4 extends Component {
         });
         */
         //this.flatListRef.scrollTo(0, 0);
-
+        // this.setState({ sihoon: true });
         this.flatListRef.scrollToIndex({
           animated: true,
           index: index,
         });
-
+        // if (this.myRef.state.ischeck) {
+        // }
         //this.refs.flatListRef.current.snapToItem(index);
+        Alert.alert(
+          "필수입력 항목을 입력해 주세요 : ",
+          this.state.QuestionName[item]
+        );
         return;
       }
     }
@@ -182,7 +205,7 @@ export default class SurveyScreen4 extends Component {
     };
 
     body = mergeJSON.merge(body, this.state.AnswerDatas);
-    console.log(body);
+    // console.log(body);
     fetch(url, {
       method: "POST",
       headers: headers,
@@ -222,6 +245,9 @@ export default class SurveyScreen4 extends Component {
     console.log(this.scroll.current);
     //this.scroll.current;
   }
+  componentDidMount() {
+    console.log(",,,,,,,,,,", this.state.QuestionScrollRef.length);
+  }
   render() {
     return this.state.isLoading ? (
       <View style={{ flex: 1, justifyContent: "center" }}>
@@ -251,11 +277,11 @@ export default class SurveyScreen4 extends Component {
             // enabled
             // keyboardVerticalOffset={100}
 
-            contentContainerStyle={{
-              height: 150,
-              // flex: 1,
-              // justifyContent: "flex-end",
-            }}
+            // contentContainerStyle={{
+            //   height: 150,
+            //   // flex: 1,
+            //   // justifyContent: "flex-end",
+            // }}
           >
             <FlatList
               keyboardShouldPersistTaps={"always"}
@@ -266,8 +292,8 @@ export default class SurveyScreen4 extends Component {
               keyExtractor={(item, index) => index.toString()}
               initialNumToRender={20}
               onEndReachedThreshold={1}
-              refreshing={this.state.refreshing}
-              onRefresh={this.onRefresh}
+              // refreshing={this.state.refreshing}
+              // onRefresh={this.onRefresh}
               // style={{
               //   overflowX: "hidden",
               // }}
