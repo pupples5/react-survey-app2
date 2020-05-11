@@ -39,7 +39,6 @@ export default class Accordian extends Component {
               <TouchableOpacity
                 activeOpacity={0.8}
                 key={key}
-                // onPress={this._goToNextStep.bind(this, item.name)}
                 onPress={this._changeToParent.bind(this, item.id)}
               >
                 <View style={styles.child} key={key}>
@@ -78,6 +77,9 @@ const styles = StyleSheet.create({
   child: {
     backgroundColor: "#e8e8e8",
     padding: 10,
+    height: 40,
+    borderBottomWidth: 0.3,
+    borderBottomColor: "#fcfcfc",
   },
   icon_style: {
     color: "#5e5d5d",

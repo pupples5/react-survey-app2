@@ -1,10 +1,12 @@
-import React from "react";
+import React, { createRef } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { Badge, ThemeProvider } from "react-native-elements";
 
 const theme = {
   colors: {
-    primary: "gray",
+    primary: "#1aa81a", //ing
+    success: "#48a0f3", //before
+    warning: "#919191", //end
   },
 };
 
@@ -12,6 +14,7 @@ class SurveyItem extends React.Component {
   /*
   TODO: 받아온 데이터의 요소들을 prop을 통해 사용할 것인지, state에 저장할 것인지 추후 결정 필요
   */
+
   constructor(props) {
     super(props);
     this.state = {
@@ -23,6 +26,15 @@ class SurveyItem extends React.Component {
     };
   }
 
+  _checkBadgeStatus() {
+    if (this.state.period == "ING") {
+      return "primary";
+    } else if (this.state.period == "BEFORE") {
+      return "success";
+    } else {
+      return "warning";
+    }
+  }
   // 해당 설문조사의 상태(진행중,준비중,완료)를 구분
   _checkSurveyPeriod() {
     if (this.state.period == "ING") {
@@ -65,12 +77,12 @@ class SurveyItem extends React.Component {
         <View style={styles.survey_status_area}>
           <ThemeProvider theme={theme}>
             <Badge
+              // ref={this.bagdeRef}
+              status={this._checkBadgeStatus()}
               badgeStyle={styles.survey_status_badge}
-              status="primary"
+              // status="warning"
               value={this._checkSurveyPeriod()}
-            >
-              {this._checkSurveyPeriod}
-            </Badge>
+            />
           </ThemeProvider>
         </View>
       </View>
@@ -113,7 +125,7 @@ const styles = StyleSheet.create({
   },
   survey_status_badge: {
     marginLeft: 20,
-    width: 45,
+    width: 48,
     height: 23,
   },
   survey_status_badge_ing: {
@@ -122,9 +134,7 @@ const styles = StyleSheet.create({
     // fontFamily: "korea-fonts",
     padding: 5,
     color: "white",
-    backgroundColor: "#1aa81a",
     borderRadius: 8,
-    overflow: "hidden",
   },
   survey_status_badge_before: {
     fontSize: 13,
@@ -132,9 +142,7 @@ const styles = StyleSheet.create({
     // fontFamily: "korea-fonts",
     padding: 5,
     color: "white",
-    backgroundColor: "#48a0f3",
     borderRadius: 8,
-    overflow: "hidden",
   },
   survey_status_badge_end: {
     fontSize: 13,
@@ -143,7 +151,6 @@ const styles = StyleSheet.create({
     padding: 5,
     color: "white",
     borderRadius: 8,
-    overflow: "hidden",
   },
 });
 
