@@ -16,7 +16,7 @@ export default class OtherComment extends Component {
       _submitAction: props._submitAction,
       _ChangeOtherComment: props._ChangeOtherComment,
       empty: [],
-      isfocused: "",
+      isfocused: false,
     };
   }
 
@@ -46,13 +46,9 @@ export default class OtherComment extends Component {
             onChangeText={(text) => {
               this.state._ChangeOtherComment(text);
             }}
-            onFocus={(event) => {
-              this.props._scrollToInput(findNodeHandle(event.target));
-            }}
-            onBlur={() => {
-              this.setState({ isEndElement: true });
-              Keyboard.dismiss;
-            }}
+            onBlur={Keyboard.dismiss}
+            // onFocus={this._setExtraHeight}
+            // onBlur={this._setExtraHeight}
           />
           {/* {this.state.isEndElement ? (
             <View style={{ backgroundColor: "red", height: 400 }} />
@@ -61,10 +57,21 @@ export default class OtherComment extends Component {
         </View>
 
         <Button onPress={this.state._submitAction} title="제출하기" />
-        {this.state.isfocused ? <View style={{ height: 300 }}></View> : <></>}
+        <View style={{ height: 300 }}></View>
+        {/* {this.state.isfocused ? <View style={{ height: 300 }}></View> : <></>} */}
       </View>
     );
   }
+
+  _setExtraHeight = () => {
+    if (!this.state.isfocused) {
+      console.log("gg");
+      this.setState({ isfocused: true });
+    } else {
+      console.log("ll");
+      this.setState({ isfocused: false });
+    }
+  };
 }
 
 const styles = StyleSheet.create({

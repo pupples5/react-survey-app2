@@ -12,7 +12,6 @@ import {
   Keyboard,
   TextInput,
   Dimensions,
-  Platform,
   UIManager,
   KeyboardAvoidingView,
   Platform,
@@ -243,9 +242,13 @@ export default class SurveyScreen4 extends Component {
         <View style={styles.survey_container}>
           <Text style={styles.text}>Step4. 설문 답변을 입력해주세요.</Text>
           <KeyboardAvoidingView
+            style={{
+              flex: 1,
+              flexDirection: "column",
+            }}
             // behavior="height"
             // keyboardVerticalOffset={300}
-            keyboardShouldPersistTaps={"always"}
+            //keyboardShouldPersistTaps={"handled"}
             behavior={Platform.OS === "ios" ? "padding" : null}
             keyboardVerticalOffset={Platform.select({ ios: 120, android: 500 })}
             // keyboardShouldPersistTaps={"always"}
@@ -267,7 +270,7 @@ export default class SurveyScreen4 extends Component {
             // }}
           >
             <FlatList
-              keyboardShouldPersistTaps={"always"}
+              //keyboardShouldPersistTaps={"always"}
               data={this.state.QuestionDatas}
               ref={(ref) => {
                 this.flatListRef = ref;
