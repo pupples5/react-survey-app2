@@ -10,6 +10,7 @@ import {
   findNodeHandle,
   YellowBox,
   KeyboardAvoidingView,
+  ScrollView
 } from "react-native";
 
 import Get from "../module/Get";
@@ -267,15 +268,7 @@ export default class SurveyScreen4 extends Component {
         <Text style={styles.title}>설문조사</Text>
         <View style={styles.survey_container}>
           <Text style={styles.text}>Step4. 설문 답변을 입력해주세요.</Text>
-          <KeyboardAwareScrollView
-            contentContainerStyle={{
-              flex: 1,
-              // justifyContent: "space-around",
-              // alignItems: "center",
-              // width: null,
-              // height: null,
-            }}
-          >
+          <ScrollView>
             <FlatList
               data={this.state.QuestionDatas}
               ref={(ref) => {
@@ -293,14 +286,16 @@ export default class SurveyScreen4 extends Component {
               // getItemLayout={(data, index) => {
               //   console.log(data + " " + index);
               // }}
-              ListFooterComponent={
-                <OtherComment
-                  _submitAction={this._submitAction}
-                  _ChangeOtherComment={this._ChangeOtherComment}
-                />
-              }
+              scrollEnabled={false}
+              // ListFooterComponent={
+                
+              // }
             />
-          </KeyboardAwareScrollView>
+            <OtherComment
+              _submitAction={this._submitAction}
+              _ChangeOtherComment={this._ChangeOtherComment}
+            />
+          </ScrollView>
         </View>
       </View>
     );
