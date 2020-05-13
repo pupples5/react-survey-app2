@@ -14,8 +14,7 @@ import {
   Dimensions,
   UIManager,
   KeyboardAvoidingView,
-  Platform,
-  ToastAndroid,
+  ScrollView,
 } from "react-native";
 import Get from "../module/Get";
 import {
@@ -241,34 +240,7 @@ export default class SurveyScreen4 extends Component {
         <Text style={styles.title}>설문조사</Text>
         <View style={styles.survey_container}>
           <Text style={styles.text}>Step4. 설문 답변을 입력해주세요.</Text>
-          <KeyboardAvoidingView
-            style={{
-              flex: 1,
-              flexDirection: "column",
-            }}
-            // behavior="height"
-            // keyboardVerticalOffset={300}
-            //keyboardShouldPersistTaps={"handled"}
-            behavior={Platform.OS === "ios" ? "padding" : null}
-            keyboardVerticalOffset={Platform.select({ ios: 120, android: 500 })}
-            // keyboardShouldPersistTaps={"always"}
-            // keyboardDismissMode={"none"}
-            enableOnAndroid={true}
-            // style={{
-            //   flex: 1,
-            //   flexDirection: "column",
-            //   justifyContent: "center",
-            // }}
-            // behavior="padding"
-            // enabled
-            // keyboardVerticalOffset={100}
-
-            // contentContainerStyle={{
-            //   height: 150,
-            //   // flex: 1,
-            //   // justifyContent: "flex-end",
-            // }}
-          >
+          <ScrollView>
             <FlatList
               //keyboardShouldPersistTaps={"always"}
               data={this.state.QuestionDatas}
@@ -283,15 +255,16 @@ export default class SurveyScreen4 extends Component {
               // style={{
               //   overflowX: "hidden",
               // }}
-              renderItem={this._renderQuestion}
-              ListFooterComponent={
-                <OtherComment
-                  _submitAction={this._submitAction}
-                  _ChangeOtherComment={this._ChangeOtherComment}
-                />
-              }
+              scrollEnabled={false}
+              // ListFooterComponent={
+
+              // }
             />
-          </KeyboardAvoidingView>
+            <OtherComment
+              _submitAction={this._submitAction}
+              _ChangeOtherComment={this._ChangeOtherComment}
+            />
+          </ScrollView>
         </View>
       </View>
     );
