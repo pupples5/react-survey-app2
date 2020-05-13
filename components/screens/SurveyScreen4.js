@@ -103,7 +103,7 @@ export default class SurveyScreen4 extends Component {
 
   _renderQuestion = ({ item }) => {
     const { id, degree_id, type, required, question, children } = item;
-    console.log("_renderQuestion,", this.state.sihoon);
+    //console.log("_renderQuestion,", this.state.sihoon);
     if (type === "radio") {
       return (
         <View
@@ -228,7 +228,7 @@ export default class SurveyScreen4 extends Component {
     //this.scroll.current;
   }
   componentDidMount() {
-    console.log(",,,,,,,,,,", this.state.QuestionScrollRef.length);
+    // console.log(",,,,,,,,,,", this.state.QuestionScrollRef.length);
   }
   render() {
     return this.state.isLoading ? (

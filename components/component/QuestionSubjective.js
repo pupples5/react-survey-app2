@@ -25,7 +25,7 @@ export default class QuestionSubjective extends Component {
     return (
       <View
         ref={(ref) => {
-          console.log(ref);
+          //console.log(ref);
           this.state.setitemRef(ref);
         }}
         onLayout={(event) => {
@@ -53,7 +53,6 @@ export default class QuestionSubjective extends Component {
         <TextInput
           style={styles.inputArea}
           placeholder="의견을 작성해주세요."
-          keyboardType="none"
           multiline
           onBlur={() => {
             if (this.state.text !== "") {
