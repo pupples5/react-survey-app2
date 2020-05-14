@@ -44,8 +44,10 @@ export default class SurveyScreen4 extends Component {
       QuestionScrollRef: [],
       QuestionisAnswered: [],
       QuestionName: [],
+      QuestionOffset: [],
     };
     this.flatListRef = "";
+    this.scrollRef = "";
     this.TESTURL = QUESTION_LIST_URL + this.state.degree_id;
   }
 
@@ -97,7 +99,14 @@ export default class SurveyScreen4 extends Component {
 
   _findDimensions = (layout) => {
     const { x, y, width, height } = layout;
-    console.log(x, y, width, height);
+    // console.log("111111", x, y, width, height);
+    if (this.state.QuestionOffset.length === 0) {
+      this.state.QuestionOffset.push(0);
+    } else {
+      this.state.QuestionOffset.push(
+        this.state.QuestionOffset[this.state.QuestionOffset.length - 1] + height
+      );
+    }
   };
 
   _renderQuestion = ({ item }) => {
@@ -106,7 +115,6 @@ export default class SurveyScreen4 extends Component {
     if (type === "radio") {
       return (
         <View
-          ref="Marker"
           onLayout={(event) => {
             this._findDimensions(event.nativeEvent.layout);
           }}
@@ -128,7 +136,11 @@ export default class SurveyScreen4 extends Component {
       );
     } else if (type === "text") {
       return (
-        <View>
+        <View
+          onLayout={(event) => {
+            this._findDimensions(event.nativeEvent.layout);
+          }}
+        >
           <QuestionSubjective
             id={id}
             degree_id={degree_id}
@@ -155,18 +167,17 @@ export default class SurveyScreen4 extends Component {
         ); //이유는 모르겠지만 alert 때문에 랜더링이 2번되서 호출 2번함;
         //alert("필수 항목을 입력해주세요"); //이유는 모르겠지만 alert 때문에 랜더링이 2번되서 호출 2번함;
 
-        /*
-        this.flatListRef.scrollToOffset({
-          offset: 300,
+        this.scrollRef.scrollTo({
+          x: 0,
+          y: this.state.QuestionOffset[index],
           animated: true,
         });
-        */
         //this.flatListRef.scrollTo(0, 0);
         // this.setState({ sihoon: true });
-        this.flatListRef.scrollToIndex({
-          animated: true,
-          index: index,
-        });
+        // this.flatListRef.scrollToIndex({
+        //   animated: true,
+        //   index: index,
+        // });
         return;
       }
     }
@@ -227,7 +238,11 @@ export default class SurveyScreen4 extends Component {
     //this.scroll.current;
   }
   componentDidMount() {
-    // console.log(",,,,,,,,,,", this.state.QuestionScrollRef.length);
+    console.log("길이", this.state.QuestionOffset.length);
+
+    for (let i = 0; i < this.state.QuestionOffset.length; i++) {
+      console.log("value", this.state.QuestionOffset.keys);
+    }
   }
   render() {
     return this.state.isLoading ? (
@@ -240,7 +255,11 @@ export default class SurveyScreen4 extends Component {
         <Text style={styles.title}>설문조사</Text>
         <View style={styles.survey_container}>
           <Text style={styles.text}>Step4. 설문 답변을 입력해주세요.</Text>
-          <ScrollView>
+          <ScrollView
+            ref={(ref) => {
+              this.scrollRef = ref;
+            }}
+          >
             <FlatList
               //keyboardShouldPersistTaps={"always"}
               data={this.state.QuestionDatas}
@@ -259,6 +278,7 @@ export default class SurveyScreen4 extends Component {
               // ListFooterComponent={
 
               // }
+              renderItem={this._renderQuestion}
             />
             <OtherComment
               _submitAction={this._submitAction}

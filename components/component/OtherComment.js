@@ -57,7 +57,7 @@ export default class OtherComment extends Component {
         </View>
 
         <Button onPress={this.state._submitAction} title="제출하기" />
-        <View style={{ height: 300 }}></View>
+        {/* <View style={{ height: 300 }}></View> */}
         {/* {this.state.isfocused ? <View style={{ height: 300 }}></View> : <></>} */}
       </View>
     );

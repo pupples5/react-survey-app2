@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { RadioGroup, RadioButton } from "react-native-flexi-radio-button";
-import { StyleSheet, Text, View } from "react-native";
+import { findNodeHandle, StyleSheet, Text, View } from "react-native";
 import OtherComment from "./OtherComment";
 
 export default class QuestionRadio extends Component {
@@ -21,9 +21,8 @@ export default class QuestionRadio extends Component {
     this.Radioref = "";
   }
 
+  componentDidMount() {}
   render() {
-    console.log("하하,", this.state.sihoon);
-    console.log("ren", this.state.isEmpty);
     const radioButtons = [];
     this.state.children.map((item, key) => {
       radioButtons.push(
@@ -37,11 +36,11 @@ export default class QuestionRadio extends Component {
     return (
       <View
         ref={(ref) => {
+          this.Radioref = ref;
           this.state.setitemRef(ref, this.state.id);
         }}
         onLayout={(event) => {
-          const layout = event.nativeEvent.layout;
-          // console.log(layout.y);
+          //const layout = event.nativeEvent.layout;
           if (this.state.required === 1) {
             //false넣기 + layout 오브젝트 넣기?
             this.state.reqCheck(false, this.state.id, this.state.question);
