@@ -13,7 +13,7 @@
     "@react-native-community/masked-view": "0.1.6",
     "@use-expo/font": "^2.0.0",
     "admin-lte": "^3.0.4",
-    "axios": "^0.19.2",
+    "axios": "^0.21.1",
     "bootstrap": "^3.4.1",
     "deprecated-react-native-listview": "0.0.6",
     "expo": "^37.0.0",
